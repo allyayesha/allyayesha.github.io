@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evening Tracker</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff6f9;
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, h2 {
+      background-color: #ffccd5; /* pink banner */
+      padding: 0.4em;
+      color: #000000; /* black text */
+      text-align: center;
+      border-radius: 5px;
+      display: inline-block;
+      margin: 0.5em auto;
+    }
+
+    nav a {
+      color: #8B0000;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main {
+      margin-top: 0.5em;
+    }
+
+    form {
+      background: white;
+      padding: 1.5em;
+      margin: 0.5em auto;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+      color: #d66889;
+    }
+
+    .sublabel {
+      display: block;
+      font-weight: normal;
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 0.2em;
+    }
+
+    #exerciseDetails label.sublabel {
+      color: #e089a3;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      box-sizing: border-box;
+      color: #000;
+    }
+
+    button {
+      background: #d66889;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.8em;
+      width: 100%;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 1.5em;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #c15575;
+    }
+
+    footer {
+      margin-top: 2em;
+      padding: 1em;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .checkbox-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 0.5em;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: #d66889;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h2 {
+      font-size: 1.8em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .checkbox-group.snacks {
+      justify-content: flex-start;
+    }
+
+    .checkbox-group.snacks .checkbox-item {
+      color: #555;
+    }
+
+    .checkbox-group.health {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .checkbox-group.health .checkbox-item {
+      color: #555;
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+    }
+
+    table {
+      width: 50%;
+      margin: 1em auto;
+      border-collapse: collapse;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 0.5em;
+      text-align: center;
+      font-size: 0.9em;
+      border: 1px solid #ccc;
+      color: #000; /* table text black */
+    }
+
+    th {
+      background-color: #ffccd5; /* pink banner for table headers */
+      color: #000000; /* black text */
+    }
+
+    #monthFilterContainer {
+      margin: 1em auto;
+      width: 50%;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      table, #monthFilterContainer {
+        width: 95%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <h2>EVENING TRACKER</h2>
+  <nav>
+      <a href="index.html">Home</a> |
+      <a href="morning.html" class="btn">Start Our Day</a> |
+      <a href="afternoon.html" class="btn">Middle of Our Day</a> |
+      <a href="aroutine.html">Ayesha's Routine</a> |
+  </nav>
+
+  <main>
+    <section id="tracker">
+      <form id="dailyForm">
+        <label for="name">Which Lover is Typing?</label>
+        <select id="name" required>
+          <option value="">Select</option>
+          <option value="Ayesha">Ayesha</option>
+          <option value="Kevon">Kevon</option>
+        </select>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" required>
+
+        <label for="food">Which Meal?</label>
+        <select id="food" required>
+          <option value="">Select</option>
+          <option value="Breakfast only">Breakfast</option>
+          <option value="Lunch only">Lunch</option>
+          <option value="Dinner only">Supper</option>
+        </select>
+
+        <label for="foodOther">What did you Eat?</label>
+        <input type="text" id="foodOther" class="hidden" />
+
+        <label>Number of Snacks:</label>
+        <div class="checkbox-group snacks">
+          <label class="checkbox-item">
+            1
+            <input type="checkbox" id="snack1" name="snacks" value="1">
+          </label>
+          <label class="checkbox-item">
+            2
+            <input type="checkbox" id="snack2" name="snacks" value="2">
+          </label>
+          <label class="checkbox-item">
+            3
+            <input type="checkbox" id="snack3" name="snacks" value="3">
+          </label>
+        </div>
+
+        <label for="wakeTime">What Time Did You Go Sleep?</label>
+        <input type="time" id="wakeTime" required>
+
+        <div id="exerciseDetails" class="hidden">
+          <label class="sublabel" for="exercise">What Did You Workout?</label>
+          <input type="text" id="exercise" placeholder="e.g. Running, Yoga">
+        </div>
+
+        <label for="water">Water Intake:</label>
+        <input type="text" id="water" placeholder="e.g. 6 glasses or 1.5L" required>
+
+        <label for="mood">Mood:</label>
+        <select id="mood" required>
+          <option value="">Select</option>
+          <option value="😊 Happy">😊 Happy</option>
+          <option value="🙁 Not Happy">🙁 Not Happy</option>
+          <option value="😐 Okay">😐 Okay</option>
+          <option value="😕 Not Okay">😕 Not Okay</option>
+          <option value="😤 Frustrated">😤 Frustrated</option>
+          <option value="😡 Angry">😡 Angry</option>
+          <option value="😒 Irritated">😒 Irritated</option>
+          <option value="😣 Sensitive">😣 Sensitive</option>
+          <option value="😐 Meh">😐 Meh</option>
+          <option value="😞 Down">😞 Down</option>
+        </select>
+
+        <label>Health Log:</label>
+        <div class="checkbox-group health">
+          <label class="checkbox-item">
+            Nauseous
+            <input type="checkbox" name="healthLog" value="Nauseous">
+          </label>
+          <label class="checkbox-item">
+            Sinus
+            <input type="checkbox" name="healthLog" value="Sinus">
+          </label>
+          <label class="checkbox-item">
+            Feeling Sick
+            <input type="checkbox" name="healthLog" value="Feeling Sick">
+          </label>
+          <label class="checkbox-item">
+            Stomach Problems
+            <input type="checkbox" name="healthLog" value="Stomach Problems">
+          </label>
+          <label class="checkbox-item">
+            N/A
+            <input type="checkbox" name="healthLog" value="N/A">
+          </label>
+        </div>
+
+        <button type="submit">Save Entry</button>
+      </form>
+    </section>
+
+    <h2>LOVE LOG</h2>
+    <div id="monthFilterContainer"></div>
+    <div id="tableContainer"></div>
+
+  </main>
+  
+  <footer>
+    &copy; 2025 Made with ❤️ by Ayesha & Kevon
+  </footer>
+
+<script>
+  let entries = JSON.parse(localStorage.getItem('dailyEntries')) || [];
+  const form = document.getElementById('dailyForm');
+
+  const foodSelect = document.getElementById('food');
+  const foodOtherInput = document.getElementById('foodOther');
+  const foodOtherLabel = document.querySelector('label[for="foodOther"]');
+
+  foodSelect.addEventListener('change', () => {
+    if(foodSelect.value === "Breakfast only" || foodSelect.value === "Lunch only" || foodSelect.value === "Dinner only"){
+      foodOtherInput.classList.remove('hidden');
+      foodOtherLabel.classList.remove('hidden');
+    } else {
+      foodOtherInput.classList.add('hidden');
+      foodOtherLabel.classList.add('hidden');
+    }
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const entry = {
+      name: document.getElementById('name').value,
+      date: document.getElementById('date').value,
+      food: document.getElementById('food').value,
+      foodOther: document.getElementById('foodOther').value,
+      snacks: Array.from(document.querySelectorAll('input[name="snacks"]:checked')).map(s => s.value).join(', '),
+      wakeTime: document.getElementById('wakeTime').value,
+      sleep: '',
+      exercise: document.getElementById('exercise').value,
+      water: document.getElementById('water').value,
+      mood: document.getElementById('mood').value,
+      healthLog: Array.from(document.querySelectorAll('input[name="healthLog"]:checked')).map(h => h.value).join(', ')
+    };
+    entries.push(entry);
+    localStorage.setItem('dailyEntries', JSON.stringify(entries));
+    alert('Entry saved!');
+    form.reset();
+    renderTable(document.getElementById('monthFilter').value);
+  });
+
+  function getCurrentMonth() {
+    const now = new Date();
+    const month = (now.getMonth()+1).toString().padStart(2,'0');
+    return `${now.getFullYear()}-${month}`;
+  }
+
+  function renderMonthSlider() {
+    const container = document.getElementById('monthFilterContainer');
+    const label = document.createElement('label');
+    label.setAttribute('for', 'monthFilter');
+
+    const monthInput = document.createElement('input');
+    monthInput.type = 'month';
+    monthInput.id = 'monthFilter';
+    monthInput.value = getCurrentMonth();
+
+    container.appendChild(label);
+    container.appendChild(monthInput);
+
+    monthInput.addEventListener('change', () => {
+      renderTable(monthInput.value);
+    });
+  }
+
+  function renderTable(month){
+    const container = document.getElementById('tableContainer');
+    container.innerHTML = '';
+    const filtered = entries.filter(e => e.date.startsWith(month));
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Meal</th>
+        <th>Food Details</th>
+        <th>Snacks</th>
+        <th>Wake Time</th>
+        <th>Sleep Hours</th>
+        <th>Exercise</th>
+        <th>Water Intake</th>
+        <th>Mood</th>
+        <th>Health Log</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    if(filtered.length === 0){
+      tbody.innerHTML = `<tr><td colspan="11">No entries for this month.</td></tr>`;
+    } else {
+      filtered.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.name}</td>
+          <td>${e.date}</td>
+          <td>${e.food}</td>
+          <td>${e.foodOther}</td>
+          <td>${e.snacks}</td>
+          <td>${e.wakeTime}</td>
+          <td>${e.sleep}</td>
+          <td>${e.exercise}</td>
+          <td>${e.water}</td>
+          <td>${e.mood}</td>
+          <td>${e.healthLog}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    table.appendChild(tbody);
+    container.appendChild(table);
+  }
+
+  renderMonthSlider();
+  renderTable(getCurrentMonth());
+</script>
+</body>
+</html>

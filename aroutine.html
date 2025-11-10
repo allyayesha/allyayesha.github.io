@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayesha's Routine</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff6f9; /* page background */
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #ffccd5; /* pink banner */
+      padding: 1em;
+    }
+
+    nav a {
+      color: #8B0000;
+      margin: 0 10px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #000000;
+      margin: 0.5em 0;
+    }
+
+    .month-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1em;
+    }
+
+    .month-btn {
+      background: #f48fb1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5em 1em;
+      margin: 0 1em;
+      cursor: pointer;
+    }
+
+    .month-btn:hover {
+      background: #f06292;
+    }
+
+    .calendar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 1em 0;
+      max-width: 95%;
+    }
+
+    .block {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      background: none;
+    }
+
+    .block:hover {
+      transform: scale(1.2);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2em auto;
+      max-width: 500px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin: 0.5em;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      margin-right: 8px;
+      border: 1px solid #ccc;
+    }
+
+    /* Form styling like Daily Tracker */
+    #symptomForm {
+      max-width: 400px;
+      margin: 1em auto;
+      background: white;
+      padding: 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    #symptomForm label {
+      font-weight: bold;
+      color: #d66889;
+      display: block;
+      margin: 0.5em 0 0.2em;
+    }
+
+    #symptomForm select, 
+    #symptomForm input[type="date"] {
+      width: 100%;
+      padding: 0.5em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-top: 0.2em;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    #symptomsContainer label {
+      color: #555;
+      display: block;
+      margin: 0.2em 0;
+      font-weight: normal;
+    }
+
+    #symptomForm button {
+      margin-top: 1em;
+      width: 100%;
+      padding: 0.6em;
+      font-size: 1em;
+      background: #d66889;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #symptomForm button:hover {
+      background: #c05674;
+    }
+
+    footer {
+      margin-top: 2em;
+      padding: 1em;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    /* Pink banner for Past Entries */
+    .past-entries-header {
+      background-color: #ffccd5; /* pink banner */
+      padding: 0.4em;
+    }
+
+    #saveMessage {
+      margin-top: 1em;
+      color: pink;
+      font-weight: bold;
+    }
+
+    #noEntriesMessage {
+      margin-top: 1em;
+      color: #444;
+      font-weight: bold;
+    }
+
+    /* Styling for Past Entries */
+    #entryDetails {
+      margin-top: 2em;
+      text-align: center;  /* Align the entries in the center */
+      padding: 1em;
+      background: #fff;
+      border-radius: 4px
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      max-width: 40%; /* Optional: limits width to make it more readable on large screens */
+      margin-left: auto;
+      margin-right: auto;  /* Center the entries container */
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Period Tracker</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="morning.html">Start Our Day</a> |
+	<a href="afternoon.html" class="btn">Middle of Our Day</a> |
+	  <a href="evening.html" class="btn">End of Our Day</a> |
+  </nav>
+</header>
+
+<main>
+  <div class="month-nav">
+    <button id="prevMonth" class="month-btn">← Previous</button>
+    <h2 id="monthTitle"></h2>
+    <button id="nextMonth" class="month-btn">Next →</button>
+  </div>
+
+  <div class="calendar" id="periodCalendar"></div>
+
+  <div id="symptomForm">
+    <label for="date">Date</label>
+    <input type="date" id="entryDate">
+
+    <label for="flow">Flow</label>
+    <select id="flow">
+      <option value="">Select</option>
+      <option value="Spotting">Spotting</option>
+      <option value="Light">Light</option>
+      <option value="Medium">Medium</option>
+      <option value="Heavy">Heavy</option>
+    </select>
+
+    <label for="mood">Mood</label>
+    <select id="mood">
+      <option value="">Select</option>
+      <option value="😊 Happy">😊 Happy</option>
+      <option value="🙁 Sad">🙁 Sad</option>
+      <option value="😐 Okay">😐 Okay</option>
+      <option value="😕 Not Okay">😕 Not Okay</option>
+      <option value="😤 Frustrated">😤 Frustrated</option>
+      <option value="😒 Irritated">😒 Irritated</option>
+      <option value="😢 Sensitive">😢 Sensitive</option>
+      <option value="😭 Crying">😭 Crying</option>
+    </select>
+
+    <label for="symptoms">Symptoms</label>
+    <div id="symptomsContainer">
+      <label><input type="checkbox" value="Cramps"> Cramps</label>
+      <label><input type="checkbox" value="Headache"> Headache</label>
+      <label><input type="checkbox" value="Nausea"> Nausea</label>
+      <label><input type="checkbox" value="Fatigue"> Fatigue</label>
+      <label><input type="checkbox" value="Bloating"> Bloating</label>
+      <label><input type="checkbox" value="Tender Breasts"> Tender Breasts</label>
+      <label><input type="checkbox" value="Mood Swings"> Mood Swings</label>
+    </div>
+
+    <button id="saveEntry">Save Entry</button>
+    <div id="saveMessage"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#ffebee;"></div>Spotting</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffcdd2;"></div>Light</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ef9a9a;"></div>Medium</div>
+    <div class="legend-item"><div class="legend-color" style="background:#e57373;"></div>Heavy</div>
+  </div>
+</main>
+
+<h1 class="past-entries-header">Past Entries</h1>
+
+<div id="entryDetails" class="entry">
+  <!-- Entry details will be injected here -->
+  <div id="noEntriesMessage"></div>
+</div>
+
+<footer>
+  &copy; 2025 Made with ❤️ by Ayesha & Kevon
+</footer>
+
+<script>
+  const saveButton = document.getElementById("saveEntry");
+  const saveMessage = document.getElementById("saveMessage");
+  const entryDate = document.getElementById("entryDate");
+  const flow = document.getElementById("flow");
+  const mood = document.getElementById("mood");
+  const symptoms = document.querySelectorAll("#symptomsContainer input[type='checkbox']");
+  const noEntriesMessage = document.getElementById("noEntriesMessage");
+  
+  const prevMonthButton = document.getElementById("prevMonth");
+  const nextMonthButton = document.getElementById("nextMonth");
+  const monthTitle = document.getElementById("monthTitle");
+  const periodCalendar = document.getElementById("periodCalendar");
+
+  let currentMonth = new Date();
+  
+  // Function to update the month view
+  function updateCalendar() {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    
+    monthTitle.textContent = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    // Get number of days in the month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Clear the calendar before updating
+    periodCalendar.innerHTML = '';
+
+    // Add blocks for each day of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const block = document.createElement('div');
+      block.classList.add('block');
+      block.textContent = day;
+
+      block.addEventListener('click', function() {
+        // Open flow and mood form when clicking a block
+        entryDate.value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      });
+
+      periodCalendar.appendChild(block);
+    }
+  }
+
+  // Event listeners for navigation buttons
+  prevMonthButton.addEventListener('click', function() {
+    currentMonth.setMonth(currentMonth.getMonth() - 1);
+    updateCalendar();
+  });
+
+  nextMonthButton.addEventListener('click', function() {
+    currentMonth.setMonth(currentMonth.getMonth() + 1);
+    updateCalendar();
+  });
+
+  // Function to save the entry to localStorage
+  saveButton.addEventListener("click", function() {
+    const dateValue = entryDate.value;
+    const flowValue = flow.value;
+    const moodValue = mood.value;
+    const selectedSymptoms = [];
+
+    symptoms.forEach(function(symptom) {
+      if (symptom.checked) {
+        selectedSymptoms.push(symptom.value);
+      }
+    });
+
+    if (!dateValue || !flowValue || !moodValue) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const newEntry = {
+      date: dateValue,
+      flow: flowValue,
+      mood: moodValue,
+      symptoms: selectedSymptoms
+    };
+
+    let entries = JSON.parse(localStorage.getItem("periodEntries")) || [];
+    entries.push(newEntry);
+    localStorage.setItem("periodEntries", JSON.stringify(entries));
+
+    // Show success message
+    saveMessage.textContent = "Entry saved successfully!";
+    saveMessage.style.color = "green";
+
+    // Update Past Entries section
+    renderPastEntries();
+
+    // Clear form fields
+    entryDate.value = "";
+    flow.value = "";
+    mood.value = "";
+    symptoms.forEach(symptom => symptom.checked = false);
+  });
+
+  // Function to render past entries
+  function renderPastEntries() {
+    const entries = JSON.parse(localStorage.getItem("periodEntries")) || [];
+    const entryDetailsEl = document.getElementById("entryDetails");
+
+    if (entries.length === 0) {
+      noEntriesMessage.textContent = "No Entries Recorded Yet";
+    } else {
+      noEntriesMessage.textContent = "";  // Clear "No entries" message
+
+      entryDetailsEl.innerHTML = "";  // Clear previous entries
+      entries.forEach(entry => {
+        const entryDiv = document.createElement("div");
+        entryDiv.classList.add("entry-detail");
+        entryDiv.innerHTML = `
+          <p><strong>Date:</strong> ${entry.date}</p>
+          <p><strong>Flow:</strong> ${entry.flow}</p>
+          <p><strong>Mood:</strong> ${entry.mood}</p>
+          <p><strong>Symptoms:</strong> ${entry.symptoms.join(", ")}</p>
+          <hr>
+        `;
+        entryDetailsEl.appendChild(entryDiv);
+      });
+    }
+  }
+
+  // Render past entries and calendar on page load
+  renderPastEntries();
+  updateCalendar();
+</script>
+
+</body>
+</html>
